@@ -29,16 +29,10 @@ public class EventServiceImpl implements EventService {
     public Optional<Event> find(Integer id) {
         Optional<Event> eventoOptional = repo.findById(id);
 
-        eventoOptional.ifPresent(evento -> {
-            // Hacer algo con el evento encontrado
-            System.out.println("Evento encontrado: " + evento.getTitle());
-        });
-
-        if (eventoOptional.isEmpty()) {
-            // Manejar el caso en que el evento no se encuentre
-            System.out.println("Evento no encontrado");
-        }
-
+        eventoOptional.ifPresentOrElse(
+                evento -> System.out.println("Evento encontrado: " + evento.getTitle()),
+                () -> System.out.println("Evento no encontrado")
+        );
         return eventoOptional;
     }
 
