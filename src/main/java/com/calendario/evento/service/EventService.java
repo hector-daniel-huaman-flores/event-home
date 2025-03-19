@@ -11,7 +11,7 @@ public interface EventService {
 
     Event create(Event event);
 
-    Event find(Integer id);
+    Optional<Event> find(Integer id);
 
     Event update(Event event);
 

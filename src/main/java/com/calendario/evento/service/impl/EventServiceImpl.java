@@ -26,18 +26,33 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event find(Integer id) {
-        Optional<Event> op = repo.findById(id);
-        return op.orElseGet(Event::new);
+    public Optional<Event> find(Integer id) {
+        Optional<Event> eventoOptional = repo.findById(id);
+
+        eventoOptional.ifPresent(evento -> {
+            // Hacer algo con el evento encontrado
+            System.out.println("Evento encontrado: " + evento.getTitle());
+        });
+
+        if (eventoOptional.isEmpty()) {
+            // Manejar el caso en que el evento no se encuentre
+            System.out.println("Evento no encontrado");
+        }
+
+        return eventoOptional;
     }
 
     @Override
     public Event update(Event event) {
-        return repo.save(event);
+        return repo.findById(event.getId())
+                .map(existingEvent -> repo.save(event))
+                .orElseThrow(() -> new RuntimeException("Evento con ID " + event.getId() + " no encontrado"));
     }
 
     @Override
     public void delete(Integer id) {
+        repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Evento con ID " + id + " no encontrado"));
         repo.deleteById(id);
     }
 }
